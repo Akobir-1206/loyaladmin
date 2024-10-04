@@ -1,12 +1,9 @@
 import React from 'react'
 
-const Category = () => {
+export default function Category() {
   return (
     <div>
-      <h1>Category</h1>
-      
+      <h1>skjhajkhdf</h1>
     </div>
   )
 }
-
-export default Category
