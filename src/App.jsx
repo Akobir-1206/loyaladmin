@@ -1,7 +1,7 @@
 import './App.css'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import Login from './Components/Login/Login'
-import Sidebar from './Components/Home'
+import Sidebar from './Components/Sidebar/Home'
 import Category from './pages/Category'
 import News from './pages/News'
 import Faqs from './pages/Faqs'
@@ -9,7 +9,6 @@ import Services from './pages/Services'
 import Sources from './pages/Sources'
 import Blogs from './pages/Blogs'
 import ProtectedRoute from './Components/Login/Protect'
-import Home from './Components/Home/Home'
 
 function App() {
   return (

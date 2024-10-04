@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, Modal, theme } from 'antd';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-
+import '../Sidebar/Home.css'
 const { Header, Sider, Content } = Layout;
 
 export default function Sidebar() {
@@ -24,16 +24,19 @@ export default function Sidebar() {
   // Logoutni tasdiqlovchi Modalni boshqaruvchi funksiyalar
   const showModal = () => {
     setIsModalVisible(true);
+    
   };
 
   const handleOk = () => {
     setIsModalVisible(false);
-    navigate('/login'); // Tasdiqlanganda login sahifasiga o'tkazish
+    localStorage.removeItem('tokenchik');
+    navigate('/login');
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  
 
   return (
     <div
@@ -107,10 +110,11 @@ export default function Sidebar() {
             {/* Logout Button */}
             <Button
               type="primary"
+              bodyStyle={{ backgroundColor: '#001f3f', color: '#fff' }}
               icon={<LogoutOutlined />}
               onClick={showModal}
               style={{
-                marginRight: '10px',
+                marginRight: '10px', backgroundColor: '#001f3a'
               }}
             >
               Log Out
@@ -131,7 +135,7 @@ export default function Sidebar() {
       </Layout>
 
       {/* Log Outni tasdiqlovchi Modal */}
-      <Modal
+      <Modal className='logout'
         title="Confirm Logout"
         visible={isModalVisible}
         onOk={handleOk}
