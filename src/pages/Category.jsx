@@ -7,7 +7,9 @@ export default function Category() {
   const tokenxon = localStorage.getItem('tokenchik');
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm(); 
+  const [currentCategory, setCurrentCategory] = useState(null); 
+  const [form] = Form.useForm();
+
 
   function getCategory() {
     fetch('https://api.dezinfeksiyatashkent.uz/api/categories')
@@ -15,7 +17,7 @@ export default function Category() {
       .then((element) => setCateg(element?.data))
       .catch((error) => {
         console.error('Error fetching categories:', error);
-        toast.error('Kategoriyalarni yuklashda xatolik yuz berdi');
+        message.error('Kategoriyalarni yuklashda xatolik yuz berdi');
       });
   }
 
@@ -23,16 +25,23 @@ export default function Category() {
     getCategory();
   }, []);
 
-  const showModal = () => {
+  // Show modal for adding or editing category
+  const showModal = (category = null) => {
+    setCurrentCategory(category); // If null, it's an Add, otherwise it's an Edit
+    if (category) {
+      form.setFieldsValue(category); // Prepopulate the form for editing
+    } else {
+      form.resetFields(); // Reset the form for adding a new category
+    }
     setOpen(true);
   };
 
   const closeModal = () => {
     setOpen(false);
-    form.resetFields(); // Reset the form fields when closing the modal
+    form.resetFields();
   };
 
-  ///////////DELETE///////////////
+
   const deleteCategory = (id) => {
     fetch(`https://api.dezinfeksiyatashkent.uz/api/categories/${id}`, {
       method: 'DELETE',
@@ -61,11 +70,16 @@ export default function Category() {
       });
   };
 
-  ///////////SUBMIT FORM///////////////
+  // Handle form submission for adding or editing a category
   const handleSubmit = (values) => {
-    setLoading(true); // Set loading state
-    fetch('https://api.dezinfeksiyatashkent.uz/api/categories', {
-      method: 'POST',
+    setLoading(true);
+    const url = currentCategory
+      ? `https://api.dezinfeksiyatashkent.uz/api/categories/${currentCategory.id}`
+      : 'https://api.dezinfeksiyatashkent.uz/api/categories';
+    const method = currentCategory ? 'PUT' : 'POST';
+
+    fetch(url, {
+      method: method,
       headers: {
         Authorization: `Bearer ${tokenxon}`,
         'Content-Type': 'application/json',
@@ -75,22 +89,23 @@ export default function Category() {
       .then((res) => res.json())
       .then((result) => {
         if (result?.success) {
-          message.success(result?.message || 'Category added successfully');
+          message.success(result?.message || (currentCategory ? 'Category updated successfully' : 'Category added successfully'));
           getCategory(); // Refresh category list
           closeModal(); // Close modal on success
         } else {
-          message.error(result?.message || 'Error adding category');
+          message.error(result?.message || (currentCategory ? 'Error updating category' : 'Error adding category'));
         }
       })
       .catch((error) => {
-        console.error('Error adding category:', error);
-        toast.error("Kategoriyani qo'shishda xatolik yuz berdi");
+        console.error('Error saving category:', error);
+        toast.error(currentCategory ? "Kategoriyani yangilashda xatolik yuz berdi" : "Kategoriyani qo'shishda xatolik yuz berdi");
       })
       .finally(() => {
-        setLoading(false); 
+        setLoading(false);
       });
   };
-   
+
+  // Table columns configuration
   const columns = [
     {
       title: 'Id',
@@ -110,15 +125,17 @@ export default function Category() {
     },
   ];
 
+  // Data for the table
   const Akobir = categ.map((category, index) => ({
     key: index,
-    number: index + 1,
     id: category.id,
     name: category.name,
     description: category.description,
     action: (
       <>
-        <Button type="primary" style={{ margin: '10px' }}>Edit</Button>
+        <Button type="primary" style={{ margin: '10px' }} onClick={() => showModal(category)}>
+          Edit
+        </Button>
         <Popconfirm
           placement="topLeft"
           title="Kategoriyani o'chirish"
@@ -137,12 +154,12 @@ export default function Category() {
 
   return (
     <div>
-      <Button type="primary" onClick={showModal} style={{ marginBottom: '10px' }}>
+      <Button type="primary" onClick={() => showModal()} style={{ marginBottom: '10px' }}>
         Add
       </Button>
       <Table columns={columns} dataSource={Akobir} />
       <Modal
-        title="Category qo'shish"
+        title={currentCategory ? "Category o'zgartirish" : "Category qo'shish"}
         open={open}
         footer={null}
         onCancel={closeModal}
@@ -160,11 +177,11 @@ export default function Category() {
           }}
           onFinish={handleSubmit}
         >
-          <Form.Item label="Name" name="name">
-            <Input placeholder="name" required/>
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input the name!' }]}>
+            <Input placeholder="name" />
           </Form.Item>
-          <Form.Item label="Descrip" name="description">
-            <Input placeholder="description" required/>
+          <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the description!' }]}>
+            <Input placeholder="description" />
           </Form.Item>
 
           <Form.Item
