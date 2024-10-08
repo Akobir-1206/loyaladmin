@@ -157,7 +157,7 @@ export default function Category() {
       <Button type="primary" onClick={() => showModal()} style={{ marginBottom: '10px' }}>
         Add
       </Button>
-      <Table columns={columns} dataSource={Akobir} />
+      <Table columns={columns} dataSource={Akobir}/>
       <Modal
         title={currentCategory ? "Category o'zgartirish" : "Category qo'shish"}
         open={open}

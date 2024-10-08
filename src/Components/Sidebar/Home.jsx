@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -9,22 +9,34 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, Modal, theme } from 'antd';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import '../Sidebar/Home.css'
+
 const { Header, Sider, Content } = Layout;
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false); // Modal holatini boshqarish uchun state
-  const navigate = useNavigate(); // Sahifa navigatsiyasi uchun hook
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = useState('1');
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  // Logoutni tasdiqlovchi Modalni boshqaruvchi funksiyalar
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.includes('/category')) setSelectedKey('1');
+    else if (path.includes('/news')) setSelectedKey('2');
+    else if (path.includes('/faqs')) setSelectedKey('3');
+    else if (path.includes('/services')) setSelectedKey('4');
+    else if (path.includes('/blogs')) setSelectedKey('5');
+    else if (path.includes('/sources')) setSelectedKey('6');
+  }, [location]);
+
   const showModal = () => {
     setIsModalVisible(true);
-    
   };
 
   const handleOk = () => {
@@ -36,55 +48,50 @@ export default function Sidebar() {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  
+
+  const menuItems = [
+    {
+      key: '1',
+      icon: <UserOutlined />,
+      label: <NavLink to='/category'>Category</NavLink>
+    },
+    {
+      key: '3',
+      icon: <UploadOutlined />,
+      label: <NavLink to='/faqs'>Faqs</NavLink>
+    },
+    {
+      key: '2',
+      icon: <VideoCameraOutlined />,
+      label: <NavLink to='/news'>News</NavLink>
+    },
+    {
+      key: '4',
+      icon: <UploadOutlined />,
+      label: <NavLink to='/services'>Services</NavLink>
+    },
+    {
+      key: '5',
+      icon: <UserOutlined />,
+      label: <NavLink to='/blogs'>Blogs</NavLink>
+    },
+    {
+      key: '6',
+      icon: <SettingOutlined />,
+      label: <NavLink to='/sources'>Sources</NavLink>
+    },
+  ];
 
   return (
-    <div
-      style={{
-        maxWidth: '100%',
-        margin: '0 auto', // Layoutni gorizontal markazlash
-        height: '100vh',  // To'liq ekran balandligini to'ldirish
-      }}
-    >
-      <Layout style={{ minHeight: '100vh' }}> {/* Layout to'liq balandlikni qoplaydi */}
+    <div style={{ maxWidth: '100%', margin: '0 auto', height: '100vh', }}>
+      <Layout style={{ minHeight: '100vh' }}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="demo-logo-vertical" />
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={['1']}
-            items={[
-              {
-                key: '1',
-                icon: <UserOutlined />,
-                label: (<><NavLink to='/category'>Category</NavLink></>)
-              },
-              {
-                key: '2',
-                icon: <VideoCameraOutlined />,
-                label: (<><NavLink to='/news'>News</NavLink></>)
-              },
-              {
-                key: '3',
-                icon: <UploadOutlined />,
-                label: (<><NavLink to='/faqs'>Faqs</NavLink></>)
-              },
-              {
-                key: '4',
-                icon: <UploadOutlined />,
-                label: (<><NavLink to='/services'>Services</NavLink></>)
-              },
-              {
-                key: '5',
-                icon: <UserOutlined />,
-                label: (<><NavLink to='/blogs'>Blogs</NavLink></>)
-              },
-              {
-                key: '6',
-                icon: <SettingOutlined />,
-                label: (<><NavLink to='/sources'>Sources</NavLink></>)
-              },
-            ]}
+            selectedKeys={[selectedKey]}
+            items={menuItems}
           />
         </Sider>
         <Layout>
@@ -107,14 +114,13 @@ export default function Sidebar() {
                 height: 64,
               }}
             />
-            {/* Logout Button */}
             <Button
               type="primary"
-              bodyStyle={{ backgroundColor: '#001f3f', color: '#fff' }}
               icon={<LogoutOutlined />}
               onClick={showModal}
               style={{
-                marginRight: '10px', backgroundColor: '#001f3a'
+                marginRight: '10px',
+                backgroundColor: '#001f3a'
               }}
             >
               Log Out
@@ -134,7 +140,6 @@ export default function Sidebar() {
         </Layout>
       </Layout>
 
-      {/* Log Outni tasdiqlovchi Modal */}
       <Modal className='logout'
         title="Confirm Logout"
         visible={isModalVisible}
