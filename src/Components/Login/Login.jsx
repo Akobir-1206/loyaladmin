@@ -38,7 +38,7 @@ export default function Login() {
 
     return (
         <div style={{ maxWidth: 300, margin: '0 auto', paddingTop: 100 }}>
-            <h1>Loyal admin panel</h1>
+            <h1>Loyal admin n</h1>
             <Form
                 name="normal_login"
                 initialValues={{ remember: true }}
