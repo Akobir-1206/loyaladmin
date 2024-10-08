@@ -58,10 +58,10 @@ export default function News() {
       })
       .then((items) => {
         if (items?.success) {
-          message.success(items?.message || 'News muvaffaqiyatli o\'chirildi');
-          getFaqs();
+          message.success(items?.message);
+          getNews(); // Corrected function call here
         } else {
-          message.error(items?.message || 'Newsni o\'chirishda xatolik yuz berdi');
+          message.error(items?.message);
         }
       })
       .catch((error) => {
@@ -69,13 +69,13 @@ export default function News() {
         message.error("Newsni o'chirishda xatolik yuz berdi");
       });
   };
-
+  
   // FAQ qo'shish yoki yangilash
   const handleSubmit = (values) => {
     setLoading(true);
     const url = currentNews
-      ? `https://api.dezinfeksiyatashkent.uz/api/faqs/${currentNews.id}`
-      : 'https://api.dezinfeksiyatashkent.uz/api/faqs';
+      ? `https://api.dezinfeksiyatashkent.uz/api/news/${currentNews.id}`
+      : 'https://api.dezinfeksiyatashkent.uz/api/news';
     const method = currentNews ? 'PUT' : 'POST';
 
     fetch(url, {
@@ -155,7 +155,7 @@ export default function News() {
           placement="topLeft"
           title="Newsni o'chirish"
           description="Ushbu Newsni o'chirishni xohlaysizmi?"
-          onConfirm={() => deleteFaqs(news.id)}
+          onConfirm={() => deleteNews(news.id)}
           okText="Ha"
           cancelText="Yo'q"
         >
