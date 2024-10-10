@@ -66,14 +66,14 @@ export default function Sidebar() {
       label: <NavLink to='/news'>News</NavLink>
     },
     {
-      key: '4',
-      icon: <UploadOutlined />,
-      label: <NavLink to='/services'>Services</NavLink>
-    },
-    {
       key: '5',
       icon: <UserOutlined />,
       label: <NavLink to='/blogs'>Blogs</NavLink>
+    },
+    {
+      key: '4',
+      icon: <UploadOutlined />,
+      label: <NavLink to='/services'>Services</NavLink>
     },
     {
       key: '6',
