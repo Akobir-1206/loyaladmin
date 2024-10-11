@@ -113,11 +113,11 @@ export default function Blogs() {
 
   const columns = [
     { title: 'Title (EN)', dataIndex: 'title_en' },
-    { title: 'Text (EN)', dataIndex: 'text_en' },
+    // { title: 'Text (EN)', dataIndex: 'text_en' },
     { title: 'Title (RU)', dataIndex: 'title_ru' },
-    { title: 'Text (RU)', dataIndex: 'text_ru' },
+    // { title: 'Text (RU)', dataIndex: 'text_ru' },
     { title: 'Title (UZ)', dataIndex: 'title_uz' },
-    { title: 'Text (UZ)', dataIndex: 'text_uz' },
+    // { title: 'Text (UZ)', dataIndex: 'text_uz' },
     { title: "Author", dataIndex: 'author' },
     {
       title: "Images",
